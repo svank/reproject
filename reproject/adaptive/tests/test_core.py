@@ -52,7 +52,7 @@ def test_reproject_adaptive_2d(wcsapi, center_jacobian, roundtrip_coords):
             (data_in, wcs_in), wcs_out, shape_out=(60, 60),
             center_jacobian=center_jacobian,
             roundtrip_coords=roundtrip_coords,
-            boundary_mode='ignore')
+            boundary_mode='ignore', kernel='hann')
 
     # Check that surface brightness is conserved in the unrotated case
     assert_allclose(np.nansum(data_in), np.nansum(array_out) * (256 / 60) ** 2, rtol=0.1)
@@ -94,7 +94,7 @@ def test_reproject_adaptive_2d_rotated(center_jacobian, roundtrip_coords):
             (data_in, wcs_in), wcs_out, shape_out=(60, 60),
             center_jacobian=center_jacobian,
             roundtrip_coords=roundtrip_coords,
-            boundary_mode='ignore')
+            boundary_mode='ignore', kernel='hann')
 
     # ASTROPY_LT_40: astropy v4.0 introduced new default header keywords,
     # once we support only astropy 4.0 and later we can update the reference
@@ -602,7 +602,7 @@ def test_reproject_adaptive_roundtrip(file_format):
     data, wcs, target_wcs = prepare_test_data(file_format)
 
     output, footprint = reproject_adaptive((data, wcs), target_wcs, (128, 128),
-                                           center_jacobian=True)
+                                           center_jacobian=True, kernel='hann')
 
     header_out = target_wcs.to_header()
 
@@ -628,7 +628,7 @@ def test_reproject_adaptive_uncentered_jacobian():
     data, wcs, target_wcs = prepare_test_data('fits')
 
     output, footprint = reproject_adaptive((data, wcs), target_wcs, (128, 128),
-                                           center_jacobian=False)
+                                           center_jacobian=False, kernel='hann')
 
     header_out = target_wcs.to_header()
 
